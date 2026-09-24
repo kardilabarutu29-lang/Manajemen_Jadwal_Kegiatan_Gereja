@@ -3,107 +3,250 @@ package com.mycompany.manajemen_jadwal_kegiatan_gereja;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         ManajemenKegiatan m = new ManajemenKegiatan();
+
         int pilih = -1;
 
         while (pilih != 0) {
-            System.out.println("\n=== MANAJEMEN GEREJA (OMK) ===");
-            System.out.println("1. Kelola Kegiatan\n2. Kelola Petugas\n3. Kelola Tempat\n0. Keluar");
+            System.out.println("\n=== SISTEM MANAJEMEN GEREJA ===");
+            System.out.println("1. Kelola Kegiatan");
+            System.out.println("2. Kelola Petugas");
+            System.out.println("3. Kelola Tempat");
+            System.out.println("0. Keluar");
+
             pilih = InputValidator.inputAngka(sc, "Pilih: ");
 
             switch (pilih) {
-                case 1:
+
+                case 1 -> {
                     System.out.println("\n--- DATA KEGIATAN ---");
                     System.out.println("1. Lihat | 2. Tambah | 3. Ubah | 4. Hapus | 0. Kembali");
-                    int sub1 = InputValidator.inputAngka(sc, "Pilih: ");
-                    if (sub1 == 1) {
-                        m.tampilKegiatan();
-                    } else if (sub1 == 2) {
-                        String id = InputValidator.inputTeks(sc, "ID: ");
-                        String nama = InputValidator.inputTeks(sc, "Nama: ");
-                        String tgl = InputValidator.inputTanggal(sc, "Tanggal");
-                        String jam = InputValidator.inputJam(sc, "Jam");
-                        String kat = InputValidator.inputTeks(sc, "Kategori: ");
-                        String desk = InputValidator.inputTeks(sc, "Deskripsi: ");
-                        String idP = InputValidator.inputTeks(sc, "ID Petugas: ");
-                        String idT = InputValidator.inputTeks(sc, "ID Tempat: ");
-                        m.listKegiatan.add(new Kegiatan(id, nama, tgl, jam, kat, desk, idP, idT));
-                        System.out.println("Berhasil ditambahkan!");
-                    } else if (sub1 == 3) {
-                        String id = InputValidator.inputTeks(sc, "Masukkan ID Kegiatan yang diubah: ");
-                        String nama = InputValidator.inputTeks(sc, "Nama Baru: ");
-                        String tgl = InputValidator.inputTanggal(sc, "Tanggal Baru");
-                        String jam = InputValidator.inputJam(sc, "Jam Baru");
-                        String kat = InputValidator.inputTeks(sc, "Kategori Baru: ");
-                        String desk = InputValidator.inputTeks(sc, "Deskripsi Baru: ");
-                        if (m.editKegiatan(id, nama, tgl, jam, kat, desk)) System.out.println("Data berhasil diubah!");
-                        else System.out.println("ID tidak ditemukan!");
-                    } else if (sub1 == 4) {
-                        String id = InputValidator.inputTeks(sc, "ID Kegiatan dihapus: ");
-                        m.listKegiatan.removeIf(k -> k.getId().equalsIgnoreCase(id));
-                        System.out.println("Data berhasil dihapus!");
-                    }
-                    break;
 
-                case 2:
-                    System.out.println("\n--- DATA PETUGAS ---");
-                    System.out.println("1. Lihat | 2. Tambah | 3. Ubah | 4. Hapus | 0. Kembali");
-                    int sub2 = InputValidator.inputAngka(sc, "Pilih: ");
-                    if (sub2 == 1) {
-                        m.tampilPetugas();
-                    } else if (sub2 == 2) {
-                        String id = InputValidator.inputTeks(sc, "ID: ");
-                        String nama = InputValidator.inputTeks(sc, "Nama: ");
-                        String peran = InputValidator.inputTeks(sc, "Peran: ");
-                        String hp = InputValidator.inputTeks(sc, "No HP: ");
-                        m.listPetugas.add(new Petugas(id, nama, peran, hp));
-                        System.out.println("Berhasil ditambahkan!");
-                    } else if (sub2 == 3) {
-                        String id = InputValidator.inputTeks(sc, "Masukkan ID Petugas yang diubah: ");
-                        String nama = InputValidator.inputTeks(sc, "Nama Baru: ");
-                        String peran = InputValidator.inputTeks(sc, "Peran Baru: ");
-                        String hp = InputValidator.inputTeks(sc, "No HP Baru: ");
-                        if (m.editPetugas(id, nama, peran, hp)) System.out.println("Data berhasil diubah!");
-                        else System.out.println("ID tidak ditemukan!");
-                    } else if (sub2 == 4) {
-                        String id = InputValidator.inputTeks(sc, "ID Petugas dihapus: ");
-                        if (m.hapusPetugas(id)) System.out.println("Data berhasil dihapus!");
-                    }
-                    break;
+                    int sub = InputValidator.inputAngka(sc, "Pilih: ");
 
-                case 3:
+                    switch (sub) {
+
+                        case 1 -> m.tampilKegiatan();
+
+                        case 2 -> {
+                            String id = InputValidator.inputTeksWajib(
+                                    sc, "ID Kegiatan: ");
+
+                            if (m.idKegiatanAda(id)) {
+                                System.out.println("ID Kegiatan sudah digunakan!");
+                                break;
+                            }
+
+                            String nama = InputValidator.inputTeksWajib(
+                                    sc, "Nama: ");
+
+                            String tanggal = InputValidator.inputTanggal(
+                                    sc, "Tanggal");
+
+                            String jam = InputValidator.inputJam(
+                                    sc, "Jam");
+
+                            String kategori = InputValidator.inputTeksWajib(
+                                    sc, "Kategori (Ibadah/Sosial): ");
+
+                            if (!kategori.equalsIgnoreCase("Ibadah")
+                                    && !kategori.equalsIgnoreCase("Sosial")) {
+                                System.out.println("Kategori harus Ibadah atau Sosial!");
+                                break;
+                            }
+
+                            String deskripsi = InputValidator.inputTeksWajib(
+                                    sc, "Deskripsi: ");
+
+                            String idPetugas = InputValidator.inputIdPetugas(sc, m);
+
+                            if (idPetugas == null) break;
+
+                            String idTempat = InputValidator.inputIdTempat(sc, m);
+
+                            if (idTempat == null) break;
+
+                            if (kategori.equalsIgnoreCase("Ibadah")) {
+                                m.listKegiatan.add(new KegiatanIbadah(
+                                        id, nama, tanggal, jam,
+                                        kategori, deskripsi,
+                                        idPetugas, idTempat));
+                            } else {
+                                m.listKegiatan.add(new KegiatanSosial(
+                                        id, nama, tanggal, jam,
+                                        kategori, deskripsi,
+                                        idPetugas, idTempat));
+                            }
+
+                            System.out.println("Kegiatan berhasil ditambahkan!");
+                    }
+
+                        case 3 -> {
+                        String id = InputValidator.cariIdKegiatan(sc, m);
+                        if (id == null) break;
+                        String nama = InputValidator.inputTeksWajib(
+                                sc, "Nama Baru: ");
+                        String tanggal = InputValidator.inputTanggal(
+                                sc, "Tanggal Baru");
+                        String jam = InputValidator.inputJam(
+                                sc, "Jam Baru");
+                        String kategori = InputValidator.inputTeksWajib(
+                                sc, "Kategori Baru: ");
+                        String deskripsi = InputValidator.inputTeksWajib(
+                                sc, "Deskripsi Baru: ");
+                        if (m.editKegiatan(
+                                id, nama, tanggal, jam,
+                                kategori, deskripsi)) {
+                            System.out.println("Data berhasil diubah!");
+                        }
+                    }
+
+                        case 4 -> {
+                        String id = InputValidator.cariIdKegiatan(sc, m);
+                        if (id == null) break;
+                        if (m.hapusKegiatan(id)) {
+                            System.out.println("Data berhasil dihapus!");
+                        }
+                    }
+                    }
+                }
+
+                case 2 -> {
                     System.out.println("\n--- DATA TEMPAT ---");
                     System.out.println("1. Lihat | 2. Tambah | 3. Ubah | 4. Hapus | 0. Kembali");
-                    int sub3 = InputValidator.inputAngka(sc, "Pilih: ");
-                    if (sub3 == 1) {
-                        m.tampilTempat();
-                    } else if (sub3 == 2) {
-                        String id = InputValidator.inputTeks(sc, "ID: ");
-                        String nama = InputValidator.inputTeks(sc, "Nama: ");
-                        String lok = InputValidator.inputTeks(sc, "Lokasi: ");
-                        int kap = InputValidator.inputAngka(sc, "Kapasitas: ");
-                        m.listTempat.add(new Tempat(id, nama, lok, kap));
-                        System.out.println("Berhasil ditambahkan!");
-                    } else if (sub3 == 3) {
-                        String id = InputValidator.inputTeks(sc, "Masukkan ID Tempat yang diubah: ");
-                        String nama = InputValidator.inputTeks(sc, "Nama Baru: ");
-                        String lok = InputValidator.inputTeks(sc, "Lokasi Baru: ");
-                        int kap = InputValidator.inputAngka(sc, "Kapasitas Baru: ");
-                        if (m.editTempat(id, nama, lok, kap)) System.out.println("Data berhasil diubah!");
-                        else System.out.println("ID tidak ditemukan!");
-                    } else if (sub3 == 4) {
-                        String id = InputValidator.inputTeks(sc, "ID Tempat dihapus: ");
-                        if (m.hapusTempat(id)) System.out.println("Data berhasil dihapus!");
-                    }
-                    break;
+                    int sub = InputValidator.inputAngka(sc, "Pilih: ");
+                    switch (sub) {
 
-                case 0:
-                    System.out.println("Program selesai. Berkah Dalem!");
-                    break;
+                        case 1 -> m.tampilPetugas();
+
+                        case 2 -> {
+                            String idP = InputValidator.inputTeksWajib(
+                                    sc, "ID Petugas: ");
+
+                            if (m.idPetugasAda(idP)) {
+                                System.out.println("ID Petugas sudah digunakan!");
+                                break;
+                            }
+
+                            String namaP = InputValidator.inputTeksWajib(
+                                    sc, "Nama: ");
+
+                            String peran = InputValidator.inputTeksWajib(
+                                    sc, "Peran: ");
+
+                            String noHp = InputValidator.inputTeksWajib(
+                                    sc, "No HP: ");
+
+                            m.tambahPetugas(idP, namaP, peran, noHp);
+
+                            System.out.println("Petugas berhasil ditambahkan!");
+                    }
+
+                        case 3 -> {
+                        String idP = InputValidator.cariIdPetugas(sc, m);
+                        if (idP == null) break;
+                        String namaP = InputValidator.inputTeksWajib(
+                                sc, "Nama Baru: ");
+                        String peran = InputValidator.inputTeksWajib(
+                                sc, "Peran Baru: ");
+                        String noHp = InputValidator.inputTeksWajib(
+                                sc, "No HP Baru: ");
+                        if (m.editPetugas(idP, namaP, peran, noHp)) {
+                            System.out.println("Data berhasil diubah!");
+                        }
+                    }
+
+                        case 4 -> {
+                        String idP = InputValidator.cariIdPetugas(sc, m);
+                        if (idP == null) break;
+                        if (m.hapusPetugas(idP)) {
+                            System.out.println("Data berhasil dihapus!");
+                        }
+                    }
+                    }
+                }
+
+                case 3 -> {
+                    System.out.println("\n--- DATA TEMPAT ---");
+                    System.out.println("1. Lihat");
+                    System.out.println("2. Tambah");
+                    System.out.println("3. Ubah");
+                    System.out.println("4. Hapus");
+                    System.out.println("0. Kembali");
+                    int sub = InputValidator.inputAngka(sc, "Pilih: ");
+                    switch (sub) {
+
+                        case 1:
+                            m.tampilTempat();
+                            break;
+
+                        case 2:
+                            String idT = InputValidator.inputTeksWajib(
+                                    sc, "ID Tempat: ");
+
+                            if (m.idTempatAda(idT)) {
+                                System.out.println("ID Tempat sudah digunakan!");
+                                break;
+                            }
+
+                            String namaT = InputValidator.inputTeksWajib(
+                                    sc, "Nama: ");
+
+                            String lokasi = InputValidator.inputTeksWajib(
+                                    sc, "Lokasi: ");
+
+                            int kapasitas = InputValidator.inputAngka(
+                                    sc, "Kapasitas: ");
+
+                            m.tambahTempat(
+                                    idT, namaT, lokasi, kapasitas);
+
+                            System.out.println("Tempat berhasil ditambahkan!");
+                            break;
+
+                        case 3:
+                            idT = InputValidator.cariIdTempat(sc, m);
+
+                            if (idT == null) break;
+
+                            namaT = InputValidator.inputTeksWajib(
+                                    sc, "Nama Baru: ");
+
+                            lokasi = InputValidator.inputTeksWajib(
+                                    sc, "Lokasi Baru: ");
+
+                            kapasitas = InputValidator.inputAngka(
+                                    sc, "Kapasitas Baru: ");
+
+                            if (m.editTempat(
+                                    idT, namaT, lokasi, kapasitas)) {
+                                System.out.println("Data berhasil diubah!");
+                            }
+
+                            break;
+
+                        case 4:
+                            idT = InputValidator.cariIdTempat(sc, m);
+
+                            if (idT == null) break;
+
+                            if (m.hapusTempat(idT)) {
+                                System.out.println("Data berhasil dihapus!");
+                            }
+
+                            break;
+                    }
+                }
+
+                case 0 -> System.out.println("Program selesai. Berkah Dalem!");
+
+                default -> System.out.println("Pilihan tidak valid!");
             }
         }
+
         sc.close();
     }
 }

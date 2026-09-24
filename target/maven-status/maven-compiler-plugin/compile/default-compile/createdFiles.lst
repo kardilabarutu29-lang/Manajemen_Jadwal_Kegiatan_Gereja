@@ -1,6 +1,3 @@
-com\mycompany\manajemen_jadwal_kegiatan_gereja\InputValidator.class
+com\mycompany\manajemen_jadwal_kegiatan_gereja\KegiatanIbadah.class
 com\mycompany\manajemen_jadwal_kegiatan_gereja\Tempat.class
-com\mycompany\manajemen_jadwal_kegiatan_gereja\Petugas.class
-com\mycompany\manajemen_jadwal_kegiatan_gereja\Kegiatan.class
-com\mycompany\manajemen_jadwal_kegiatan_gereja\Main.class
-com\mycompany\manajemen_jadwal_kegiatan_gereja\ManajemenKegiatan.class
+com\mycompany\manajemen_jadwal_kegiatan_gereja\KegiatanSosial.class

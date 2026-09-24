@@ -8,21 +8,20 @@ public class ManajemenKegiatan {
     public ArrayList<Tempat> listTempat = new ArrayList<>();
 
     public ManajemenKegiatan() {
-        // Data Awal Khas Gereja Katolik
         listPetugas.add(new Petugas("P01", "Darius", "Prodiakon", "08123456789"));
         listTempat.add(new Tempat("T01", "Gereja Utama", "Lantai 1", 500));
-        listKegiatan.add(new Kegiatan("K01", "Misa OMK", "15-08-2026", "17:00", "Ibadah", "Misa Pemuda", "P01", "T01"));
+
+        listKegiatan.add(new KegiatanIbadah("K01", "Misa OMK", "15-08-2026", "17:00", "Ibadah", "Misa Pemuda", "P01", "T01"));
+        listKegiatan.add(new KegiatanSosial("K02", "Bakti Sosial OMK", "20-08-2026", "09:00", "Sosial", "Pembagian bantuan kepada masyarakat", "P01", "T01"));
     }
 
-    // --- READ ---
     public void tampilPetugas() {
         if (listPetugas.isEmpty()) {
             System.out.println("Data petugas kosong.");
             return;
         }
-        for (Petugas p : listPetugas) {
+        for (Petugas p : listPetugas)
             System.out.println("[" + p.getId() + "] " + p.getNama() + " - Peran: " + p.getPeran() + " (" + p.getNoHp() + ")");
-        }
     }
 
     public void tampilTempat() {
@@ -30,9 +29,8 @@ public class ManajemenKegiatan {
             System.out.println("Data tempat kosong.");
             return;
         }
-        for (Tempat t : listTempat) {
+        for (Tempat t : listTempat)
             System.out.println("[" + t.getId() + "] " + t.getNama() + " - " + t.getLokasi() + " (Kapasitas: " + t.getKapasitas() + ")");
-        }
     }
 
     public void tampilKegiatan() {
@@ -40,12 +38,10 @@ public class ManajemenKegiatan {
             System.out.println("Data kegiatan kosong.");
             return;
         }
-        for (Kegiatan k : listKegiatan) {
+        for (Kegiatan k : listKegiatan)
             System.out.println("[" + k.getId() + "] " + k.getNama() + " | " + k.getTanggal() + " " + k.getJam() + " | Kategori: " + k.getKategori());
-        }
     }
 
-    // --- UPDATE ---
     public boolean editPetugas(String id, String nama, String peran, String hp) {
         for (Petugas p : listPetugas) {
             if (p.getId().equalsIgnoreCase(id)) {
@@ -84,7 +80,10 @@ public class ManajemenKegiatan {
         return false;
     }
 
-    // --- DELETE (DENGAN CEK RELASI) ---
+    public boolean hapusKegiatan(String id) {
+        return listKegiatan.removeIf(k -> k.getId().equalsIgnoreCase(id));
+    }
+
     public boolean hapusPetugas(String id) {
         for (Kegiatan k : listKegiatan) {
             if (k.getIdPetugas().equalsIgnoreCase(id)) {
@@ -103,5 +102,31 @@ public class ManajemenKegiatan {
             }
         }
         return listTempat.removeIf(t -> t.getId().equalsIgnoreCase(id));
+    }
+
+    public void tambahPetugas(String id, String nama, String peran, String noHp) {
+        listPetugas.add(new Petugas(id, nama, peran, noHp));
+    }
+
+    public void tambahTempat(String id, String nama, String lokasi, int kapasitas) {
+        listTempat.add(new Tempat(id, nama, lokasi, kapasitas));
+    }
+    
+    public boolean idTempatAda(String id) {
+        for (Tempat t : listTempat)
+            if (t.getId().equalsIgnoreCase(id)) return true;
+        return false;
+    }
+
+    public boolean idPetugasAda(String id) {
+        for (Petugas p : listPetugas)
+            if (p.getId().equalsIgnoreCase(id)) return true;
+        return false;
+    }
+
+    public boolean idKegiatanAda(String id) {
+        for (Kegiatan k : listKegiatan)
+            if (k.getId().equalsIgnoreCase(id)) return true;
+        return false;
     }
 }
